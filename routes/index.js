@@ -1,7 +1,79 @@
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
-
 const router = express.Router();
+
+const menuData = [
+  {
+    path: '/home',
+    name: 'home',
+    label: '首页',
+  },
+  {
+    path: '/system',
+    label: '系统管理',
+    children:[
+      {
+        path:'/user',
+        name:'user',
+        label:'用户管理'
+      },
+      {
+        path:'/role',
+        name:'role',
+        label:'角色管理'
+      },
+      {
+        path:'/menu',
+        name:'menu',
+        label:'菜单管理'
+      },
+      {
+        path:'/notice',
+        name:'notice',
+        label:'通知公告'
+      },
+    ]
+  },
+  {
+    path:'/monitor',
+    label:'系统监控',
+    children:[
+      {
+        path:'/online',
+        name:'online',
+        label:'在线用户'
+      },
+      {
+        path:'/job',
+        name:'job',
+        label:'定时任务'
+      },
+      {
+        path:'/server',
+        name:'server',
+        label:'服务监控'
+      },
+    ]
+  },
+  {
+    path:'/tool',
+    label:'系统工具',
+    children:[
+      {
+        path:'/build',
+        name:'build',
+        label:'表单构建'
+      },
+      {
+        path:'/swagger',
+        name:'swagger',
+        label:'系统接口'
+      },
+    ]
+  }
+];
+
 const users = [
   {
     uid: '10000',
@@ -59,6 +131,9 @@ router.post('/login', (req, res) => {
   }
 });
 
-router.get('/getUser', (req, res) => {});
+router.get('/getMenu', (req, res) => {
+  res.send(menuData)
+});
+
 
 module.exports = router;
