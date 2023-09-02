@@ -1,4 +1,4 @@
-const menuData = [
+ const menuAdminUsers = [
   {
     path: '/home',
     name: 'home',
@@ -68,3 +68,66 @@ const menuData = [
     ]
   }
 ];
+
+const menuUsers =[
+  {
+    path: '/home',
+    name: 'home',
+    label: '首页',
+  },
+  {
+    path: '/analysis',
+    name: 'analysis',
+    label: '数据分析',
+  },
+  {
+    path: '/product',
+    label: '商品中心',
+    children:[
+      {
+        path:'/list',
+        name:'list',
+        label:'商品列表'
+      },
+      {
+        path:'/category',
+        name:'category',
+        label:'商品分类'
+      },
+      {
+        path:'/property',
+        name:'property',
+        label:'商品属性'
+      },
+      {
+        path:'/brand',
+        name:'brand',
+        label:'商品品牌'
+      },
+    ]
+  },
+  {
+    path:'/trade',
+    label:'订单中心',
+    children:[
+      {
+        path:'/order',
+        name:'order',
+        label:'订单列表'
+      },
+      {
+        path:'/afterSale',
+        name:'afterSale',
+        label:'售后管理'
+      },
+      {
+        path:'/deliverY',
+        name:'delivery',
+        label:'配送管理'
+      },
+    ]
+  },
+];
+
+
+module.exports = {menuAdminUsers,menuUsers}

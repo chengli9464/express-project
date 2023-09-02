@@ -33,10 +33,10 @@ app.use((req,res,next) =>{
   if(headers.authority !== ''){
     //解析头
     const decoded = jwt.verify(headers.authority,'服务器的JWT密码')
+    console.log(decoded);
     Object.assign(req.body,decoded)
   }
     next()
-
 });
 //使用路由
 app.use('/', indexRouter);

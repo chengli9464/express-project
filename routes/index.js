@@ -1,96 +1,23 @@
-
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const { menuAdminUsers, menuUsers } = require('../public/data/menu');
+const { users, adminUsers } = require('../public/data/user');
 
-const menuData = [
-  {
-    path: '/home',
-    name: 'home',
-    label: '首页',
-  },
-  {
-    path: '/system',
-    label: '系统管理',
-    children:[
-      {
-        path:'/user',
-        name:'user',
-        label:'用户管理'
-      },
-      {
-        path:'/role',
-        name:'role',
-        label:'角色管理'
-      },
-      {
-        path:'/menu',
-        name:'menu',
-        label:'菜单管理'
-      },
-      {
-        path:'/notice',
-        name:'notice',
-        label:'通知公告'
-      },
-    ]
-  },
-  {
-    path:'/monitor',
-    label:'系统监控',
-    children:[
-      {
-        path:'/online',
-        name:'online',
-        label:'在线用户'
-      },
-      {
-        path:'/job',
-        name:'job',
-        label:'定时任务'
-      },
-      {
-        path:'/server',
-        name:'server',
-        label:'服务监控'
-      },
-    ]
-  },
-  {
-    path:'/tool',
-    label:'系统工具',
-    children:[
-      {
-        path:'/build',
-        name:'build',
-        label:'表单构建'
-      },
-      {
-        path:'/swagger',
-        name:'swagger',
-        label:'系统接口'
-      },
-    ]
-  }
-];
-
-const users = [
-  {
-    uid: '10000',
-    username: 'admin',
-    password: '123456',
-  },
-];
-
-/* GET home page. */
+// 获取解析的token信息
 router.get('/user', function (req, res, next) {
-  const {uid} = users
-  res.send({
-    status:1,
-    msg:'成功登录',
-    uid,
-    ...req.body
-  })
+  if (req.body.username) {
+    res.send({
+      status: 1,
+      msg: '成功登录',
+      ...req.body,
+    });
+  } else {
+    res.send({
+      status: 2,
+      message: '请登录!',
+    });
+  }
 });
 
 router.post('/register', (req, res) => {
@@ -105,35 +32,68 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   //前端发送的请求体内容可以使用req.body属性接受
-  // console.log(req.cookies);
+
   const jwtSecret = '服务器的JWT密码';
+
   const { username, password } = req.body;
-  // console.log(users);
-  const findUser = users.find((element) => {
+
+  let isAdmin = false;
+
+  // 先验证管理员身份
+  const findAdminUser = adminUsers.find((element) => {
     return username === element.username && password === element.password;
   });
-  if (findUser) {
+  if (findAdminUser) {
+    //确认管理员身份
+    isAdmin = true;
     //生成一个jwt token验证用户名密码
-    const token = jwt.sign({ username, password}, jwtSecret, {
+    const token = jwt.sign({ username, password, isAdmin }, jwtSecret, {
       algorithm: 'HS256',
       expiresIn: 10000,
     });
     res.send({
       token,
       status: 1,
-      message: '账号密码正确！',
+      isAdmin,
+      message: '管理员账号密码正确！',
+      menu: menuAdminUsers
     });
   } else {
-    res.send({
-      status: 2,
-      message: '账号密码错误！',
-    });
+    // 再验证普通用户
+    const findUsers = users.find(
+      (element) =>
+        username === element.username && password === element.password
+    );
+    console.log(findUsers);
+    if (findUsers) {
+      isAdmin = false;
+      const token = jwt.sign({ username, password, isAdmin }, jwtSecret, {
+        algorithm: 'HS256',
+        expiresIn: 10000,
+      });
+      console.log(token);
+      res.send({
+        token,
+        status: 1,
+        isAdmin,
+        message: '普通用户账号密码正确！',
+        menu: menuUsers
+      });
+    } else {
+      res.send({
+        status: 2,
+        message: '账号密码错误！',
+      });
+    }
   }
 });
-
+// 没有使用 
 router.get('/getMenu', (req, res) => {
-  res.send(menuData)
-});
+  //第一次传进来是没有解析为 undefine
+  // 后续传进来利用解析token来判断
+  console.log(req.body.isAdmin,666666);
+  req.body.isAdmin ?   res.send(menuUsers) : res.send(menuAdminUsers) ;
 
+});
 
 module.exports = router;
