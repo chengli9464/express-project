@@ -16,6 +16,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
+
 //全局中间件，解析请求中的JSON格式的数据
 app.use(express.json());
 //全局中间件，解析urlencoded格式数据(键值对)
@@ -33,7 +34,7 @@ app.use((req,res,next) =>{
   if(headers.authority !== ''){
     //解析头
     const decoded = jwt.verify(headers.authority,'服务器的JWT密码')
-    console.log(decoded);
+    // console.log(decoded);
     Object.assign(req.body,decoded)
   }
     next()
