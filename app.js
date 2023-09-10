@@ -30,9 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 //全局中间件，解析请求头的token
 app.use((req,res,next) =>{
-  const {headers} = req;
-  if(headers.authority !== ''){
+  const { headers } = req;
+  if(headers.authority){
     //解析头
+    // console.log(headers.authority);
     const decoded = jwt.verify(headers.authority,'服务器的JWT密码')
     // console.log(decoded);
     Object.assign(req.body,decoded)

@@ -32,11 +32,9 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   //前端发送的请求体内容可以使用req.body属性接受
-
-  const jwtSecret = '服务器的JWT密码';
-
+  
   const { username, password } = req.body;
-
+  const jwtSecret = '服务器的JWT密码';
   let isAdmin = false;
 
   // 先验证管理员身份
@@ -89,7 +87,7 @@ router.post('/login', (req, res) => {
 });
 // 没有使用 
 router.get('/getMenu', (req, res) => {
-  //第一次传进来是没有解析为 undefine
+  //第一次传进来是没有解析为 undefined
   // 后续传进来利用解析token来判断
   console.log(req.body.isAdmin,666666);
   req.body.isAdmin ?   res.send(menuUsers) : res.send(menuAdminUsers) ;
