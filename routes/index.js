@@ -4,8 +4,9 @@ const router = express.Router();
 const { menuAdminUsers, menuUsers } = require('../public/data/menu');
 const { users, adminUsers } = require('../public/data/user');
 
+
 // 获取解析的token信息
-router.get('/user', function (req, res, next) {
+router.get('/user', function (req, res) {
   if (req.body.username) {
     res.send({
       status: 1,
@@ -23,7 +24,7 @@ router.get('/user', function (req, res, next) {
 router.post('/register', (req, res) => {
   const { username, password } = req.body;
   users.push({ username, password });
-  // console.log(users);
+  
   res.send({
     status: 0,
     message: '注册成功！',
@@ -32,7 +33,6 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   //前端发送的请求体内容可以使用req.body属性接受
-  
   const { username, password } = req.body;
   const jwtSecret = '服务器的JWT密码';
   let isAdmin = false;
